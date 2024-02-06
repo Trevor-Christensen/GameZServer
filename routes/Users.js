@@ -23,7 +23,6 @@ router.post("/RegisterForm", async (req, res) => {
     res.status(201).send("Registered successfully");
   } catch (err) {
     console.error(err);
-    console.log("we are in register");
     res.status(500).send("Failed registration");
   }
 });
@@ -38,12 +37,14 @@ router.post("/login", async (req, res) => {
 
   try {
     const user = await knex("users").where({ User_email }).first(); // Fixed reference to User_email
-    console.log("we are in login");
     if (!user) {
       return res.status(400).send("Invalid email");
     }
 
-    const isPasswordCorrect = bcrypt.compareSync(User_password, user.user_password);
+    const isPasswordCorrect = bcrypt.compareSync(
+      User_password,
+      user.user_password
+    );
 
     if (!isPasswordCorrect) {
       return res.status(400).send("Invalid password");
@@ -54,7 +55,6 @@ router.post("/login", async (req, res) => {
       process.env.JWT_KEY,
       { expiresIn: "24h" }
     );
-
   } catch (err) {
     console.error(err);
     res.status(500).send("Login failed");
